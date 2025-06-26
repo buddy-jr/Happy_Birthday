@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0d1117;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            position: relative;
+        }
+
+        .container {
+            text-align: center;
+            color: rgba(240, 240, 240, 0.754);
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .happy-text {
+            font-size: 4rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .birthday-number {
+            font-size: 5rem;
+            font-weight: 700;
+            color: #d5df0c;
+            line-height: 1;
+            margin-top: 0rem;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+
+        .cake-svg {
+            width: 150px;
+            height: 120px;
+            margin-bottom: 1rem;
+            z-index: 1;
+        }
+
+        .birthday-image {
+            width: 150px;
+            height: auto;
+            max-width: 200px;
+            max-height: 150px;
+            margin-top: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+            animation: floatBalloon 10s ease-in-out infinite;
+        }
+
+        .balloon {
+            position: absolute;
+            width: 70px;
+            height: 90px;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            box-shadow: inset -5px -5px 5px rgba(0,0,0,0.2);
+            animation: floatBalloon 10s ease-in-out infinite;
+            transform-origin: bottom center;
+            opacity: 0.7;
+        }
+
+        .balloon::before {
+            content: '';
+            position: absolute;
+            width: 2px;
+            height: 30px;
+            background: white;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .balloon.blue { background-color: #00ffff; left: 15%; top: 20%; animation-delay: 0s; }
+        .balloon.yellow { background-color: #ffff00; left: 75%; top: 30%; animation-delay: 2s; }
+        .balloon.green { background-color: #00ff00; left: 25%; top: 50%; animation-delay: 4s; }
+        .balloon.purple { background-color: #ff00ff; left: 85%; top: 60%; animation-delay: 6s; }
+
+        @keyframes floatBalloon {
+            0%, 100% { transform: translateY(0) rotate(2deg); }
+            50% { transform: translateY(-50px) rotate(-2deg); }
+        }
+
+        #fireworksCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 5;
+        }
+
+        .fade-in-text {
+            animation: fadeIn 2s ease-out forwards;
+            opacity: 0;
+        }
+
+        .fade-in-text.delay-1 { animation-delay: 0.5s; }
+        .fade-in-text.delay-2 { animation-delay: 1s; }
+        .fade-in-text.delay-3 { animation-delay: 1.5s; }
+
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="fireworksCanvas"></canvas>
+
+    <div class="container">
+        <svg class="cake-svg" viewBox="0 0 100 100" fill="none" stroke="white" stroke-width="2">
+            <path d="M10 50 L90 50 Q95 50 95 55 L95 85 Q95 90 90 90 L10 90 Q5 90 5 85 L5 55 Q5 50 10 50 Z"/>
+            <path d="M15 50 L85 50 M15 70 L85 70"/>
+            <rect x="25" y="30" width="5" height="20" rx="2" ry="2"/>
+            <rect x="40" y="30" width="5" height="20" rx="2" ry="2"/>
+            <rect x="55" y="30" width="5" height="20" rx="2" ry="2"/>
+            <rect x="70" y="30" width="5" height="20" rx="2" ry="2"/>
+            <path d="M26 28 C27 25 29 25 30 28 C29 27 27 27 26 28 Z" fill="#FFA500" stroke="none"/>
+            <path d="M41 28 C42 25 44 25 45 28 C44 27 42 27 41 28 Z" fill="#FFA500" stroke="none"/>
+            <path d="M56 28 C57 25 59 25 60 28 C59 27 57 27 56 28 Z" fill="#FFA500" stroke="none"/>
+            <path d="M71 28 C72 25 74 25 75 28 C74 27 72 27 71 28 Z" fill="#FFA500" stroke="none"/>
+        </svg>
+
+        <div class="fade-in-text delay-1 happy-text">Happy Birthday!</div>
+        <div class="fade-in-text delay-2 birthday-number">King👑</div>
+        <img src="king.jpg" alt="Birthday Image" class="birthday-image">
+        <script>
+            document.querySelector('.birthday-image').onerror = function() {
+                this.src = "king.jpg";
+                this.alt = "Image could not be loaded";
+            };
+        </script>
+    </div>
+
+    <div class="balloon blue"></div>
+    <div class="balloon yellow"></div>
+    <div class="balloon green"></div>
+    <div class="balloon purple"></div>
+
+    <script>
+        const canvas = document.getElementById('fireworksCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let particles = [];
+        const colors = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF'];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor(x, y, color) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                this.radius = Math.random() * 2 + 1;
+                this.velocity = {
+                    x: (Math.random() - 0.5) * 8,
+                    y: (Math.random() - 0.5) * 8
+                };
+                this.alpha = 1;
+                this.friction = 0.99;
+                this.gravity = 0.05;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.restore();
+            }
+
+            update() {
+                this.velocity.x *= this.friction;
+                this.velocity.y *= this.friction;
+                this.velocity.y += this.gravity;
+                this.x += this.velocity.x;
+                this.y += this.velocity.y;
+                this.alpha -= 0.008;
+            }
+        }
+
+        function createFirework(x, y) {
+            const particleCount = 50;
+            const chosenColor = colors[Math.floor(Math.random() * colors.length)];
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle(x, y, chosenColor));
+            }
+        }
+
+        function animateFireworks() {
+            requestAnimationFrame(animateFireworks);
+            ctx.fillStyle = 'rgba(13, 17, 23, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            particles.forEach((particle, index) => {
+                if (particle.alpha > 0) {
+                    particle.update();
+                    particle.draw();
+                } else {
+                    particles.splice(index, 1);
+                }
+            });
+        }
+
+        function launchRandomFirework() {
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * canvas.height * 0.7;
+            createFirework(x, y);
+        }
+
+        window.onload = function() {
+            animateFireworks();
+            setInterval(launchRandomFirework, Math.random() * 1200 + 800);
+        };
+    </script>
+</body>
+</html>
